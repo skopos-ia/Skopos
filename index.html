@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skopos - Student Daily Planner</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f9fafb;
+        color: #111827;
+        line-height: 1.5;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      header {
+        margin-bottom: 2rem;
+      }
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .streak {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #fed7aa;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        color: #7c2d12;
+      }
+
+      .motivational {
+        color: #6b7280;
+      }
+
+      .add-btn {
+        width: 100%;
+        padding: 1rem;
+        border: 2px dashed #d1d5db;
+        background: transparent;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.2s;
+      }
+
+      .add-btn:hover {
+        border-color: #9ca3af;
+        background: #f9fafb;
+      }
+
+      .form-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-card input,
+      .form-card select,
+      .form-card textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .form-card input:focus,
+      .form-card select:focus,
+      .form-card textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        flex: 1;
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+
+      .btn-secondary {
+        background: white;
+        border: 1px solid #d1d5db;
+        color: #111827;
+      }
+
+      .btn-secondary:hover {
+        background: #f9fafb;
+      }
+
+      .task-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .task-card.priority-low {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+      }
+
+      .task-card.priority-medium {
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      .task-card.priority-high {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 0.5rem;
+      }
+
+      .task-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .task-notes {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
+
+      .date-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        border: 2px solid #e5e7eb;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .mini-calendar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: white;
+        border: 2px solid #3b82f6;
+        border-radius: 0.375rem;
+        font-weight: bold;
+        overflow: hidden;
+      }
+
+      .mini-calendar-month {
+        font-size: 0.625rem;
+        color: white;
+        background: #3b82f6;
+        width: 100%;
+        text-align: center;
+        padding: 2px 0;
+        text-transform: uppercase;
+      }
+
+      .mini-calendar-day {
+        font-size: 1.25rem;
+        color: #111827;
+        line-height: 1;
+        margin-top: 2px;
+      }
+
+      .date-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+      }
+
+      .date-label {
+        font-size: 0.75rem;
+        color: #6b7280;
+        font-weight: 500;
+      }
+
+      .days-until {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .days-until.overdue {
+        color: #dc2626;
+      }
+
+      .days-until.today {
+        color: #16a34a;
+      }
+
+      .days-until.soon {
+        color: #ea580c;
+      }
+
+      .delete-btn {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 1.2rem;
+        padding: 0.25rem;
+      }
+
+      .delete-btn:hover {
+        color: #ef4444;
+      }
+
+      .timer-display {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .timer-time {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 0.5rem;
+        background: #e5e7eb;
+        border-radius: 9999px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #3b82f6;
+        transition: width 0.3s;
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-start {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-start:hover {
+        background: #2563eb;
+      }
+
+      .btn-icon {
+        background: white;
+        border: 1px solid #d1d5db;
+        padding: 0.5rem;
+        width: 2.5rem;
+      }
+
+      .btn-icon:hover {
+        background: #f9fafb;
+      }
+
+      .btn-complete {
+        background: #10b981;
+        color: white;
+      }
+
+      .btn-complete:hover {
+        background: #059669;
+      }
+
+      .completed-section {
+        margin-top: 2rem;
+      }
+
+      .completed-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 0.75rem;
+      }
+
+      .completed-task {
+        background: #f3f4f6;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.6;
+      }
+
+      .completed-task span {
+        text-decoration: line-through;
+        color: #6b7280;
+      }
+
+      @media (max-width: 640px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-top">
+          <h1>Skopos</h1>
+          <div class="streak" id="streakDisplay" style="display: none">
+            🔥 <span id="streakCount">0</span> day streak
+          </div>
+        </div>
+        <p class="motivational" id="motivationalText">By Ian and Andrew.</p>
+      </header>
+
+      <button class="add-btn" id="addTaskBtn">+ Add task</button>
+
+      <div class="form-card" id="taskForm" style="display: none">
+        <input type="text" id="taskName" placeholder="Task name" />
+        <div class="form-row">
+          <input
+            type="number"
+            id="taskTime"
+            placeholder="Time (min)"
+            value="time"
+          />
+          <select id="taskPriority">
+            <option value="low">Low priority</option>
+            <option value="medium" selected>Medium priority</option>
+            <option value="high">High priority</option>
+          </select>
+        </div>
+        <input type="date" id="taskDate" />
+        <textarea
+          id="taskNotes"
+          placeholder="Notes (optional)"
+          rows="2"
+        ></textarea>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="submitTask">Add</button>
+          <button class="btn btn-secondary" id="cancelTask">Cancel</button>
+        </div>
+      </div>
+
+      <div id="taskList"></div>
+
+      <div
+        class="completed-section"
+        id="completedSection"
+        style="display: none"
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+          "
+        >
+          <h2 class="completed-title" style="margin-bottom: 0">Completed</h2>
+          <button
+            class="btn btn-secondary"
+            onclick="clearCompleted()"
+            style="padding: 0.375rem 0.75rem; font-size: 0.875rem"
+          >
+            Clear All
+          </button>
+        </div>
+        <div id="completedList"></div>
+      </div>
+     
+      <div style="padding-top: 500px;">
+        <h2>Mission</h2>
+        <p>We created Skopos because so many students rely on Google Docs, notebooks, or scattered tools to try to stay organized, but it's easy to lose track of assignments, deadlines, and study plans. Skopos brings everythin together in one simple, motivating app, helping students plan their time, track progress, and focus on what matters most so they can achieve their goals without feeling overwhelmed. </p>
+    </div>
+    </div>
+   
+
+    <script>
+      var motivationalMessages = ["By Ian and Andrew"];
+
+      var tasks = JSON.parse(localStorage.getItem("focusTasks") || "[]");
+      var streak = parseInt(localStorage.getItem("focusStreak") || "0");
+      var lastCompleted = localStorage.getItem("lastCompleted");
+      var activeTimer = null;
+      var timerInterval = null;
+      var timeLeft = 0;
+      var isPaused = false;
+
+      function render() {
+        updateStreak();
+        renderTasks();
+        saveTasks();
+      }
+
+      function updateStreak() {
+        var streakDisplay = document.getElementById("streakDisplay");
+        var streakCount = document.getElementById("streakCount");
+        var motivationalText = document.getElementById("motivationalText");
+
+        if (streak > 0) {
+          streakDisplay.style.display = "flex";
+          streakCount.textContent = streak;
+        } else {
+          streakDisplay.style.display = "none";
+        }
+
+        motivationalText.textContent =
+          motivationalMessages[streak % motivationalMessages.length];
+      }
+
+      function renderTasks() {
+        var taskList = document.getElementById("taskList");
+        var completedSection = document.getElementById("completedSection");
+        var completedList = document.getElementById("completedList");
+
+        var activeTasks = [];
+        var completedTasks = [];
+
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].completed) {
+            completedTasks.push(tasks[i]);
+          } else {
+            activeTasks.push(tasks[i]);
+          }
+        }
+
+        var taskHTML = "";
+        for (var i = 0; i < activeTasks.length; i++) {
+          taskHTML += buildTaskHTML(activeTasks[i]);
+        }
+        taskList.innerHTML = taskHTML;
+
+        if (completedTasks.length > 0) {
+          completedSection.style.display = "block";
+          var completedHTML = "";
+          for (var i = 0; i < completedTasks.length; i++) {
+            completedHTML +=
+              '<div class="completed-task">✓ <span>' +
+              completedTasks[i].name +
+              "</span></div>";
+          }
+          completedList.innerHTML = completedHTML;
+        } else {
+          completedSection.style.display = "none";
+        }
+      }
+
+      function buildTaskHTML(task) {
+        var html =
+          '<div class="task-card priority-' +
+          task.priority +
+          '" data-id="' +
+          task.id +
+          '">';
+        html += '<div class="task-header">';
+        html += "<div>";
+        html += '<div class="task-title">' + task.name + "</div>";
+        if (task.notes) {
+          html += '<div class="task-notes">' + task.notes + "</div>";
+        }
+        html += "</div>";
+        html +=
+          '<button class="delete-btn" onclick="deleteTask(' +
+          task.id +
+          ')">×</button>';
+        html += "</div>";
+
+        if (task.date) {
+          var cal = getCalendarDisplay(task.date);
+          var daysUntil = getDaysUntil(task.date);
+          var daysText = formatDaysUntil(daysUntil);
+          var daysClass = getDaysUntilClass(daysUntil);
+
+          html += '<div class="date-badge">';
+          html += '<div class="mini-calendar">';
+          html += '<div class="mini-calendar-month">' + cal.month + "</div>";
+          html += '<div class="mini-calendar-day">' + cal.day + "</div>";
+          html += "</div>";
+          html += '<div class="date-info">';
+          html += '<div class="date-label">' + formatDate(task.date) + "</div>";
+          html +=
+            '<div class="days-until ' + daysClass + '">' + daysText + "</div>";
+          html += "</div>";
+          html += "</div>";
+        }
+
+        if (activeTimer === task.id) {
+          html += '<div class="timer-display">';
+          html +=
+            '<div class="timer-time" id="timer-' +
+            task.id +
+            '">' +
+            formatTime(timeLeft) +
+            "</div>";
+          html += '<div class="progress-bar">';
+          html +=
+            '<div class="progress-fill" style="width: ' +
+            (timeLeft / (task.time * 60)) * 100 +
+            '%"></div>';
+          html += "</div>";
+          html += "</div>";
+        }
+
+        html += '<div class="task-actions">';
+        if (activeTimer === task.id) {
+          var buttonText = isPaused ? "▶ Resume" : "⏸ Pause";
+          html +=
+            '<button class="btn btn-start" onclick="toggleTimer(' +
+            task.id +
+            ')">' +
+            buttonText +
+            "</button>";
+          html +=
+            '<button class="btn btn-icon" onclick="resetTimer(' +
+            task.id +
+            ')">↻</button>';
+          html +=
+            '<button class="btn btn-complete" onclick="completeTask(' +
+            task.id +
+            ')">✓</button>';
+        } else {
+          html +=
+            '<button class="btn btn-start" onclick="toggleTimer(' +
+            task.id +
+            ')">▶ Start (' +
+            task.time +
+            "m)</button>";
+        }
+        html += "</div>";
+        html += "</div>";
+
+        return html;
+      }
+
+      function formatTime(seconds) {
+        var m = Math.floor(seconds / 60);
+        var s = seconds % 60;
+        if (s < 10) s = "0" + s;
+        return m + ":" + s;
+      }
+
+      function formatDate(dateStr) {
+        var date = new Date(dateStr + "T00:00:00");
+        var today = new Date();
+        var tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        today.setHours(0, 0, 0, 0);
+        tomorrow.setHours(0, 0, 0, 0);
+        date.setHours(0, 0, 0, 0);
+
+        if (date.getTime() === today.getTime()) return "Today";
+        if (date.getTime() === tomorrow.getTime()) return "Tomorrow";
+
+        var monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        var month = monthNames[date.getMonth()];
+        var day = date.getDate();
+        var year = date.getFullYear();
+
+        return month + " " + day + ", " + year;
+      }
+
+      function getDaysUntil(dateStr) {
+        var date = new Date(dateStr + "T00:00:00");
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        date.setHours(0, 0, 0, 0);
+
+        var diffTime = date.getTime() - today.getTime();
+        var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        return diffDays;
+      }
+
+      function formatDaysUntil(days) {
+        if (days === 0) return "Due today";
+        if (days === 1) return "Due tomorrow";
+        if (days === -1) return "1 day overdue";
+        if (days < 0) return Math.abs(days) + " days overdue";
+        return "Due in " + days + " days";
+      }
+
+      function getDaysUntilClass(days) {
+        if (days < 0) return "overdue";
+        if (days === 0) return "today";
+        if (days <= 3) return "soon";
+        return "";
+      }
+
+      function getCalendarDisplay(dateStr) {
+        var date = new Date(dateStr + "T00:00:00");
+        var monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        var month = monthNames[date.getMonth()];
+        var day = date.getDate();
+
+        return { month: month, day: day };
+      }
+
+      function saveTasks() {
+        localStorage.setItem("focusTasks", JSON.stringify(tasks));
+      }
+
+      function addTask() {
+        var name = document.getElementById("taskName").value.trim();
+        var time =
+          parseInt(document.getElementById("taskTime").value) || "time";
+        var priority = document.getElementById("taskPriority").value;
+        var notes = document.getElementById("taskNotes").value.trim();
+        var date = document.getElementById("taskDate").value;
+
+        if (!name) return;
+
+        var newTask = {
+          id: Date.now(),
+          name: name,
+          time: time,
+          priority: priority,
+          notes: notes,
+          date: date,
+          completed: false,
+        };
+        tasks.push(newTask);
+
+        document.getElementById("taskName").value = "";
+        document.getElementById("taskTime").value = "time";
+        document.getElementById("taskPriority").value = "medium";
+        document.getElementById("taskNotes").value = "";
+        document.getElementById("taskDate").value = "";
+        document.getElementById("taskForm").style.display = "none";
+        document.getElementById("addTaskBtn").style.display = "block";
+
+        render();
+      }
+
+      function deleteTask(id) {
+        if (activeTimer === id) stopTimer();
+        var newTasks = [];
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id !== id) {
+            newTasks.push(tasks[i]);
+          }
+        }
+        tasks = newTasks;
+        render();
+      }
+
+      function toggleTimer(id) {
+        var task = null;
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id === id) {
+            task = tasks[i];
+            break;
+          }
+        }
+
+        if (activeTimer === id) {
+          isPaused = !isPaused;
+        } else {
+          if (activeTimer !== null) stopTimer();
+          activeTimer = id;
+          timeLeft = task.time * 60;
+          isPaused = false;
+          requestNotificationPermission();
+          startTimerInterval();
+        }
+
+        render();
+      }
+
+      function startTimerInterval() {
+        if (timerInterval) clearInterval(timerInterval);
+
+        timerInterval = setInterval(function () {
+          if (!isPaused && timeLeft > 0) {
+            timeLeft--;
+            var timerEl = document.getElementById("timer-" + activeTimer);
+            if (timerEl) timerEl.textContent = formatTime(timeLeft);
+
+            var task = null;
+            for (var i = 0; i < tasks.length; i++) {
+              if (tasks[i].id === activeTimer) {
+                task = tasks[i];
+                break;
+              }
+            }
+
+            if (task) {
+              var progress = (timeLeft / (task.time * 60)) * 100;
+              var progressBar = document.querySelector(
+                '[data-id="' + activeTimer + '"] .progress-fill'
+              );
+              if (progressBar) progressBar.style.width = progress + "%";
+            }
+
+            if (timeLeft <= 0) {
+              completeTask(activeTimer);
+            }
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        clearInterval(timerInterval);
+        activeTimer = null;
+        timeLeft = 0;
+        isPaused = false;
+      }
+
+      function resetTimer(id) {
+        var task = null;
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id === id) {
+            task = tasks[i];
+            break;
+          }
+        }
+        timeLeft = task.time * 60;
+        isPaused = false;
+        render();
+      }
+
+      function completeTask(id) {
+        var task = null;
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id === id) {
+            tasks[i].completed = true;
+            task = tasks[i];
+            break;
+          }
+        }
+        stopTimer();
+        updateStreakData();
+        showNotification(
+          "Task completed! 🎉",
+          'Great work on "' + (task ? task.name : "") + '"'
+        );
+        render();
+      }
+
+      function updateStreakData() {
+        var today = new Date().toDateString();
+        var yesterday = new Date(Date.now() - 86400000).toDateString();
+
+        if (lastCompleted === today) return;
+
+        var newStreak = lastCompleted === yesterday ? streak + 1 : 1;
+        streak = newStreak;
+        lastCompleted = today;
+        localStorage.setItem("focusStreak", newStreak);
+        localStorage.setItem("lastCompleted", today);
+      }
+
+      function requestNotificationPermission() {
+        if ("Notification" in window && Notification.permission === "default") {
+          Notification.requestPermission();
+        }
+      }
+
+      function showNotification(title, body) {
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification(title, { body: body });
+        }
+      }
+
+      function clearCompleted() {
+        if (confirm("Clear all completed tasks?")) {
+          var newTasks = [];
+          for (var i = 0; i < tasks.length; i++) {
+            if (!tasks[i].completed) {
+              newTasks.push(tasks[i]);
+            }
+          }
+          tasks = newTasks;
+          render();
+        }
+      }
+
+      document
+        .getElementById("addTaskBtn")
+        .addEventListener("click", function () {
+          document.getElementById("taskForm").style.display = "block";
+          document.getElementById("addTaskBtn").style.display = "none";
+          document.getElementById("taskName").focus();
+        });
+
+      document.getElementById("submitTask").addEventListener("click", addTask);
+
+      document
+        .getElementById("cancelTask")
+        .addEventListener("click", function () {
+          document.getElementById("taskForm").style.display = "none";
+          document.getElementById("addTaskBtn").style.display = "block";
+        });
+
+      document
+        .getElementById("taskName")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") addTask();
+        });
+
+      render();
+    </script>
+  </body>
+</html><!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skopos - Student Daily Planner</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f9fafb;
+        color: #111827;
+        line-height: 1.5;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      header {
+        margin-bottom: 2rem;
+      }
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .streak {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #fed7aa;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        color: #7c2d12;
+      }
+
+      .motivational {
+        color: #6b7280;
+      }
+
+      .add-btn {
+        width: 100%;
+        padding: 1rem;
+        border: 2px dashed #d1d5db;
+        background: transparent;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.2s;
+      }
+
+      .add-btn:hover {
+        border-color: #9ca3af;
+        background: #f9fafb;
+      }
+
+      .form-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-card input,
+      .form-card select,
+      .form-card textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .form-card input:focus,
+      .form-card select:focus,
+      .form-card textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        flex: 1;
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+
+      .btn-secondary {
+        background: white;
+        border: 1px solid #d1d5db;
+        color: #111827;
+      }
+
+      .btn-secondary:hover {
+        background: #f9fafb;
+      }
+
+      .task-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .task-card.priority-low {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+      }
+
+      .task-card.priority-medium {
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      .task-card.priority-high {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 0.5rem;
+      }
+
+      .task-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .task-notes {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
+
+      .date-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        border: 2px solid #e5e7eb;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .mini-calendar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: white;
+        border: 2px solid #3b82f6;
+        border-radius: 0.375rem;
+        font-weight: bold;
+        overflow: hidden;
+      }
+
+      .mini-calendar-month {
+        font-size: 0.625rem;
+        color: white;
+        background: #3b82f6;
+        width: 100%;
+        text-align: center;
+        padding: 2px 0;
+        text-transform: uppercase;
+      }
+
+      .mini-calendar-day {
+        font-size: 1.25rem;
+        color: #111827;
+        line-height: 1;
+        margin-top: 2px;
+      }
+
+      .date-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+      }
+
+      .date-label {
+        font-size: 0.75rem;
+        color: #6b7280;
+        font-weight: 500;
+      }
+
+      .days-until {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .days-until.overdue {
+        color: #dc2626;
+      }
+
+      .days-until.today {
+        color: #16a34a;
+      }
+
+      .days-until.soon {
+        color: #ea580c;
+      }
+
+      .delete-btn {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 1.2rem;
+        padding: 0.25rem;
+      }
+
+      .delete-btn:hover {
+        color: #ef4444;
+      }
+
+      .timer-display {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .timer-time {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 0.5rem;
+        background: #e5e7eb;
+        border-radius: 9999px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #3b82f6;
+        transition: width 0.3s;
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-start {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-start:hover {
+        background: #2563eb;
+      }
+
+      .btn-icon {
+        background: white;
+        border: 1px solid #d1d5db;
+        padding: 0.5rem;
+        width: 2.5rem;
+      }
+
+      .btn-icon:hover {
+        background: #f9fafb;
+      }
+
+      .btn-complete {
+        background: #10b981;
+        color: white;
+      }
+
+      .btn-complete:hover {
+        background: #059669;
+      }
+
+      .completed-section {
+        margin-top: 2rem;
+      }
+
+      .completed-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 0.75rem;
+      }
+
+      .completed-task {
+        background: #f3f4f6;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.6;
+      }
+
+      .completed-task span {
+        text-decoration: line-through;
+        color: #6b7280;
+      }
+
+      @media (max-width: 640px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-top">
+          <h1>Skopos</h1>
+          <div class="streak" id="streakDisplay" style="display: none">
+            🔥 <span id="streakCount">0</span> day streak
+          </div>
+        </div>
+        <p class="motivational" id="motivationalText">By Ian and Andrew.</p>
+      </header>
+
+      <button class="add-btn" id="addTaskBtn">+ Add task</button>
+
+      <div class="form-card" id="taskForm" style="display: none">
+        <input type="text" id="taskName" placeholder="Task name" />
+        <div class="form-row">
+          <input
+            type="number"
+            id="taskTime"
+            placeholder="Time (min)"
+            value="time"
+          />
+          <select id="taskPriority">
+            <option value="low">Low priority</option>
+            <option value="medium" selected>Medium priority</option>
+            <option value="high">High priority</option>
+          </select>
+        </div>
+        <input type="date" id="taskDate" />
+        <textarea
+          id="taskNotes"
+          placeholder="Notes (optional)"
+          rows="2"
+        ></textarea>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="submitTask">Add</button>
+          <button class="btn btn-secondary" id="cancelTask">Cancel</button>
+        </div>
+      </div>
+
+      <div id="taskList"></div>
+
+      <div
+        class="completed-section"
+        id="completedSection"
+        style="display: none"
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+          "
+        >
+          <h2 class="completed-title" style="margin-bottom: 0">Completed</h2>
+          <button
+            class="btn btn-secondary"
+            onclick="clearCompleted()"
+            style="padding: 0.375rem 0.75rem; font-size: 0.875rem"
+          >
+            Clear All
+          </button>
+        </div>
+        <div id="completedList"></div>
+      </div>
+     
+      <div style="padding-top: 500px;">
+        <h2>Mission</h2>
+        <p>We created Skopos because so many students rely on Google Docs, notebooks, or scattered tools to try to stay organized, but it's easy to lose track of assignments, deadlines, and study plans. Skopos brings everythin together in one simple, motivating app, helping students plan their time, track progress, and focus on what matters most so they can achieve their goals without feeling overwhelmed. </p>
+    </div>
+    </div>
+   
+
+    <script>
+      var motivationalMessages = ["By Ian and Andrew"];
+
+      var tasks = JSON.parse(localStorage.getItem("focusTasks") || "[]");
+      var streak = parseInt(localStorage.getItem("focusStreak") || "0");
+      var lastCompleted = localStorage.getItem("lastCompleted");
+      var activeTimer = null;
+      var timerInterval = null;
+      var timeLeft = 0;
+      var isPaused = false;
+
+      function render() {
+        updateStreak();
+        renderTasks();
+        saveTasks();
+      }
+
+      function updateStreak() {
+        var streakDisplay = document.getElementById("streakDisplay");
+        var streakCount = document.getElementById("streakCount");
+        var motivationalText = document.getElementById("motivationalText");
+
+        if (streak > 0) {
+          streakDisplay.style.display = "flex";
+          streakCount.textContent = streak;
+        } else {
+          streakDisplay.style.display = "none";
+        }
+
+        motivationalText.textContent =
+          motivationalMessages[streak % motivationalMessages.length];
+      }
+
+      function renderTasks() {
+        var taskList = document.getElementById("taskList");
+        var completedSection = document.getElementById("completedSection");
+        var completedList = document.getElementById("completedList");
+
+        var activeTasks = [];
+        var completedTasks = [];
+
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].completed) {
+            completedTasks.push(tasks[i]);
+          } else {
+            activeTasks.push(tasks[i]);
+          }
+        }
+
+        var taskHTML = "";
+        for (var i = 0; i < activeTasks.length; i++) {
+          taskHTML += buildTaskHTML(activeTasks[i]);
+        }
+        taskList.innerHTML = taskHTML;
+
+        if (completedTasks.length > 0) {
+          completedSection.style.display = "block";
+          var completedHTML = "";
+          for (var i = 0; i < completedTasks.length; i++) {
+            completedHTML +=
+              '<div class="completed-task">✓ <span>' +
+              completedTasks[i].name +
+              "</span></div>";
+          }
+          completedList.innerHTML = completedHTML;
+        } else {
+          completedSection.style.display = "none";
+        }
+      }
+
+      function buildTaskHTML(task) {
+        var html =
+          '<div class="task-card priority-' +
+          task.priority +
+          '" data-id="' +
+          task.id +
+          '">';
+        html += '<div class="task-header">';
+        html += "<div>";
+        html += '<div class="task-title">' + task.name + "</div>";
+        if (task.notes) {
+          html += '<div class="task-notes">' + task.notes + "</div>";
+        }
+        html += "</div>";
+        html +=
+          '<button class="delete-btn" onclick="deleteTask(' +
+          task.id +
+          ')">×</button>';
+        html += "</div>";
+
+        if (task.date) {
+          var cal = getCalendarDisplay(task.date);
+          var daysUntil = getDaysUntil(task.date);
+          var daysText = formatDaysUntil(daysUntil);
+          var daysClass = getDaysUntilClass(daysUntil);
+
+          html += '<div class="date-badge">';
+          html += '<div class="mini-calendar">';
+          html += '<div class="mini-calendar-month">' + cal.month + "</div>";
+          html += '<div class="mini-calendar-day">' + cal.day + "</div>";
+          html += "</div>";
+          html += '<div class="date-info">';
+          html += '<div class="date-label">' + formatDate(task.date) + "</div>";
+          html +=
+            '<div class="days-until ' + daysClass + '">' + daysText + "</div>";
+          html += "</div>";
+          html += "</div>";
+        }
+
+        if (activeTimer === task.id) {
+          html += '<div class="timer-display">';
+          html +=
+            '<div class="timer-time" id="timer-' +
+            task.id +
+            '">' +
+            formatTime(timeLeft) +
+            "</div>";
+          html += '<div class="progress-bar">';
+          html +=
+            '<div class="progress-fill" style="width: ' +
+            (timeLeft / (task.time * 60)) * 100 +
+            '%"></div>';
+          html += "</div>";
+          html += "</div>";
+        }
+
+        html += '<div class="task-actions">';
+        if (activeTimer === task.id) {
+          var buttonText = isPaused ? "▶ Resume" : "⏸ Pause";
+          html +=
+            '<button class="btn btn-start" onclick="toggleTimer(' +
+            task.id +
+            ')">' +
+            buttonText +
+            "</button>";
+          html +=
+            '<button class="btn btn-icon" onclick="resetTimer(' +
+            task.id +
+            ')">↻</button>';
+          html +=
+            '<button class="btn btn-complete" onclick="completeTask(' +
+            task.id +
+            ')">✓</button>';
+        } else {
+          html +=
+            '<button class="btn btn-start" onclick="toggleTimer(' +
+            task.id +
+            ')">▶ Start (' +
+            task.time +
+            "m)</button>";
+        }
+        html += "</div>";
+        html += "</div>";
+
+        return html;
+      }
+
+      function formatTime(seconds) {
+        var m = Math.floor(seconds / 60);
+        var s = seconds % 60;
+        if (s < 10) s = "0" + s;
+        return m + ":" + s;
+      }
+
+      function formatDate(dateStr) {
+        var date = new Date(dateStr + "T00:00:00");
+        var today = new Date();
+        var tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        today.setHours(0, 0, 0, 0);
+        tomorrow.setHours(0, 0, 0, 0);
+        date.setHours(0, 0, 0, 0);
+
+        if (date.getTime() === today.getTime()) return "Today";
+        if (date.getTime() === tomorrow.getTime()) return "Tomorrow";
+
+        var monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        var month = monthNames[date.getMonth()];
+        var day = date.getDate();
+        var year = date.getFullYear();
+
+        return month + " " + day + ", " + year;
+      }
+
+      function getDaysUntil(dateStr) {
+        var date = new Date(dateStr + "T00:00:00");
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        date.setHours(0, 0, 0, 0);
+
+        var diffTime = date.getTime() - today.getTime();
+        var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        return diffDays;
+      }
+
+      function formatDaysUntil(days) {
+        if (days === 0) return "Due today";
+        if (days === 1) return "Due tomorrow";
+        if (days === -1) return "1 day overdue";
+        if (days < 0) return Math.abs(days) + " days overdue";
+        return "Due in " + days + " days";
+      }
+
+      function getDaysUntilClass(days) {
+        if (days < 0) return "overdue";
+        if (days === 0) return "today";
+        if (days <= 3) return "soon";
+        return "";
+      }
+
+      function getCalendarDisplay(dateStr) {
+        var date = new Date(dateStr + "T00:00:00");
+        var monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        var month = monthNames[date.getMonth()];
+        var day = date.getDate();
+
+        return { month: month, day: day };
+      }
+
+      function saveTasks() {
+        localStorage.setItem("focusTasks", JSON.stringify(tasks));
+      }
+
+      function addTask() {
+        var name = document.getElementById("taskName").value.trim();
+        var time =
+          parseInt(document.getElementById("taskTime").value) || "time";
+        var priority = document.getElementById("taskPriority").value;
+        var notes = document.getElementById("taskNotes").value.trim();
+        var date = document.getElementById("taskDate").value;
+
+        if (!name) return;
+
+        var newTask = {
+          id: Date.now(),
+          name: name,
+          time: time,
+          priority: priority,
+          notes: notes,
+          date: date,
+          completed: false,
+        };
+        tasks.push(newTask);
+
+        document.getElementById("taskName").value = "";
+        document.getElementById("taskTime").value = "time";
+        document.getElementById("taskPriority").value = "medium";
+        document.getElementById("taskNotes").value = "";
+        document.getElementById("taskDate").value = "";
+        document.getElementById("taskForm").style.display = "none";
+        document.getElementById("addTaskBtn").style.display = "block";
+
+        render();
+      }
+
+      function deleteTask(id) {
+        if (activeTimer === id) stopTimer();
+        var newTasks = [];
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id !== id) {
+            newTasks.push(tasks[i]);
+          }
+        }
+        tasks = newTasks;
+        render();
+      }
+
+      function toggleTimer(id) {
+        var task = null;
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id === id) {
+            task = tasks[i];
+            break;
+          }
+        }
+
+        if (activeTimer === id) {
+          isPaused = !isPaused;
+        } else {
+          if (activeTimer !== null) stopTimer();
+          activeTimer = id;
+          timeLeft = task.time * 60;
+          isPaused = false;
+          requestNotificationPermission();
+          startTimerInterval();
+        }
+
+        render();
+      }
+
+      function startTimerInterval() {
+        if (timerInterval) clearInterval(timerInterval);
+
+        timerInterval = setInterval(function () {
+          if (!isPaused && timeLeft > 0) {
+            timeLeft--;
+            var timerEl = document.getElementById("timer-" + activeTimer);
+            if (timerEl) timerEl.textContent = formatTime(timeLeft);
+
+            var task = null;
+            for (var i = 0; i < tasks.length; i++) {
+              if (tasks[i].id === activeTimer) {
+                task = tasks[i];
+                break;
+              }
+            }
+
+            if (task) {
+              var progress = (timeLeft / (task.time * 60)) * 100;
+              var progressBar = document.querySelector(
+                '[data-id="' + activeTimer + '"] .progress-fill'
+              );
+              if (progressBar) progressBar.style.width = progress + "%";
+            }
+
+            if (timeLeft <= 0) {
+              completeTask(activeTimer);
+            }
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        clearInterval(timerInterval);
+        activeTimer = null;
+        timeLeft = 0;
+        isPaused = false;
+      }
+
+      function resetTimer(id) {
+        var task = null;
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id === id) {
+            task = tasks[i];
+            break;
+          }
+        }
+        timeLeft = task.time * 60;
+        isPaused = false;
+        render();
+      }
+
+      function completeTask(id) {
+        var task = null;
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id === id) {
+            tasks[i].completed = true;
+            task = tasks[i];
+            break;
+          }
+        }
+        stopTimer();
+        updateStreakData();
+        showNotification(
+          "Task completed! 🎉",
+          'Great work on "' + (task ? task.name : "") + '"'
+        );
+        render();
+      }
+
+      function updateStreakData() {
+        var today = new Date().toDateString();
+        var yesterday = new Date(Date.now() - 86400000).toDateString();
+
+        if (lastCompleted === today) return;
+
+        var newStreak = lastCompleted === yesterday ? streak + 1 : 1;
+        streak = newStreak;
+        lastCompleted = today;
+        localStorage.setItem("focusStreak", newStreak);
+        localStorage.setItem("lastCompleted", today);
+      }
+
+      function requestNotificationPermission() {
+        if ("Notification" in window && Notification.permission === "default") {
+          Notification.requestPermission();
+        }
+      }
+
+      function showNotification(title, body) {
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification(title, { body: body });
+        }
+      }
+
+      function clearCompleted() {
+        if (confirm("Clear all completed tasks?")) {
+          var newTasks = [];
+          for (var i = 0; i < tasks.length; i++) {
+            if (!tasks[i].completed) {
+              newTasks.push(tasks[i]);
+            }
+          }
+          tasks = newTasks;
+          render();
+        }
+      }
+
+      document
+        .getElementById("addTaskBtn")
+        .addEventListener("click", function () {
+          document.getElementById("taskForm").style.display = "block";
+          document.getElementById("addTaskBtn").style.display = "none";
+          document.getElementById("taskName").focus();
+        });
+
+      document.getElementById("submitTask").addEventListener("click", addTask);
+
+      document
+        .getElementById("cancelTask")
+        .addEventListener("click", function () {
+          document.getElementById("taskForm").style.display = "none";
+          document.getElementById("addTaskBtn").style.display = "block";
+        });
+
+      document
+        .getElementById("taskName")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") addTask();
+        });
+
+
+      render();
+    </script>
+  </body>
+</html>
